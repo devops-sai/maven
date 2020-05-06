@@ -3,7 +3,6 @@ pipeline {
     stages {
         stage('compile') {
             steps {
-                cleanWs()
                 sh '''
                     mvn --version
                     mvn compile
@@ -12,7 +11,6 @@ pipeline {
         }
         stage('test') {
             steps {
-                cleanWs()
                 sh '''
                     mvn --version
                     mvn test
@@ -21,7 +19,6 @@ pipeline {
         }
         stage('package') {
             steps {
-                cleanWs()
                 sh '''
                     mvn --version
                     mvn package
