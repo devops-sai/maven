@@ -25,14 +25,8 @@ pipeline {
         stage('package') {
             steps {
                 sh 'mvn package'
-                sh 'xyz'
             }
         }
-        // stage('cleanWS') {
-        //     steps{
-        //         cleanWs()
-        //     }
-        // }
     }
     post{
         always{
