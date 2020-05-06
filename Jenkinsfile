@@ -22,12 +22,21 @@ pipeline {
         stage('package') {
             steps {
                 sh 'mvn package'
+                sh 'xyz'
             }
         }
-        stage('cleanWS') {
-            steps{
-                cleanWs()
-            }
+        // stage('cleanWS') {
+        //     steps{
+        //         cleanWs()
+        //     }
+        // }
+    }
+    post{
+        always{
+            cleanWs()
+        }
+        failure{
+            echo "Build failed sending mail to devops team"
         }
     }
 }
