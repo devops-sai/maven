@@ -1,28 +1,32 @@
 pipeline {
     agent any
     stages {
-        stage('compile') {
+        stage('clean') {
             steps {
                 sh '''
                     mvn --version
-                    mvn compile
+                    mvn clean
                 '''
+            }
+        }
+        stage('compile') {
+            steps {
+                sh 'mvn compile'
             }
         }
         stage('test') {
             steps {
-                sh '''
-                    mvn --version
-                    mvn test
-                '''
+                sh 'mvn test'
             }
         }
         stage('package') {
             steps {
-                sh '''
-                    mvn --version
-                    mvn package
-                '''
+                sh 'mvn package'
+            }
+        }
+        stage('cleanWS') {
+            steps{
+                cleanWS()
             }
         }
     }
