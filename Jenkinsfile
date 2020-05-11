@@ -1,7 +1,24 @@
 pipeline {
-    agent any
+    // agent any
+    agent {
+        label 'Mac'
+    }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
+    }
+    environment {
+        // DISABLE_AUTH = 'true'
+        JAVA_APPLICATION   = 'singlemodule'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo "App is ${JAVA_APPLICATION}"
+                // echo "DISABLE_AUTH is ${JAVA_APPLICATION}"
+                sh 'printenv'
+            }
+        }
     }
     stages {
         stage('clean') {
