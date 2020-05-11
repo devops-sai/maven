@@ -10,7 +10,6 @@ pipeline {
         // DISABLE_AUTH = 'true'
         JAVA_APPLICATION   = 'singlemodule'
     }
-
     stages {
         stage('Build') {
             steps {
@@ -19,8 +18,6 @@ pipeline {
                 sh 'printenv'
             }
         }
-    }
-    stages {
         stage('clean') {
             steps {
                 sh '''
