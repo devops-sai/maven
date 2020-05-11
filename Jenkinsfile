@@ -10,6 +10,9 @@ pipeline {
         // DISABLE_AUTH = 'true'
         JAVA_APPLICATION   = 'singlemodule'
     }
+    parameters {
+        booleanParam(defaultValue: true, description: '', name: 'package')
+    }
     stages {
         stage('Build') {
             steps {
@@ -42,6 +45,10 @@ pipeline {
             }
         }
         stage('package') {
+            when {
+                // Only say hello if a "greeting" is requested
+                expression { params.package == 'true' }
+            }
             steps {
                 sh 'mvn package'
             }
