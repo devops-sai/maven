@@ -50,6 +50,8 @@ pipeline {
                 expression { params.package == true }
             }
             steps {
+               echo "package: ${params.package}"
+               echo "JAVA_APPLICATION: ${env.JAVA_APPLICATION}"
                 sh 'mvn package'
             }
         }
