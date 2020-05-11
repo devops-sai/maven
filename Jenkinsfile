@@ -19,16 +19,21 @@ pipeline {
             }
         }
         stage('clean') {
+            environment {
+                JAVA_APPLICATION   = 'xyz'
+            }
             steps {
                 sh '''
                     mvn --version
                     mvn clean
+                    echo ${JAVA_APPLICATION}
                 '''
             }
         }
         stage('compile') {
             steps {
                 sh 'mvn compile'
+                echo "${JAVA_APPLICATION}"
             }
         }
         stage('test') {
