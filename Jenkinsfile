@@ -11,7 +11,7 @@ pipeline {
         JAVA_APPLICATION   = 'singlemodule'
     }
     parameters {
-        booleanParam(defaultValue: true, description: '', name: 'package')
+        booleanParam(defaultValue: true, description: 'you can uncheck the package if it should skip the package creation', name: 'package')
     }
     stages {
         stage('Build') {
@@ -47,7 +47,7 @@ pipeline {
         stage('package') {
             when {
                 // Only say hello if a "greeting" is requested
-                expression { params.package == 'true' }
+                expression { params.package == true }
             }
             steps {
                 sh 'mvn package'
