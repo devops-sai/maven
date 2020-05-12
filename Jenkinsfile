@@ -1,7 +1,7 @@
 pipeline {
     // agent any
     agent {
-        label 'Mac'
+        docker 'maven:3-alpine'
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
