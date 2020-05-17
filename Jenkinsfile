@@ -2,7 +2,10 @@ pipeline {
     // agent any
     agent {
         docker 'maven:3-alpine'
+        args "--entrypoint=‘’"
+    //   args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
     }
+    
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
     }
@@ -10,9 +13,9 @@ pipeline {
         // DISABLE_AUTH = 'true'
         JAVA_APPLICATION   = 'singlemodule'
     }
-    parameters {
-        booleanParam(defaultValue: true, description: 'you can uncheck the package if it should skip the package creation', name: 'package')
-    }
+    // parameters {
+    //     booleanParam(defaultValue: true, description: 'you can uncheck the package if it should skip the package creation', name: 'package')
+    // }
     stages {
         stage('Build') {
             steps {
@@ -45,12 +48,12 @@ pipeline {
             }
         }
         stage('package') {
-            when {
-                // Only say hello if a "greeting" is requested
-                expression { params.package == true }
-            }
+            // when {
+            //     // Only say hello if a "greeting" is requested
+            //     expression { params.package == true }
+            // }
             steps {
-               echo "package: ${params.package}"
+            //    echo "package: ${params.package}"
                echo "JAVA_APPLICATION: ${env.JAVA_APPLICATION}"
                 sh 'mvn package'
             }
