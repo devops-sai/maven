@@ -1,5 +1,5 @@
 pipeline {
-    // agent any
+    agent any
     // agent {
     //     docker 'maven:3-alpine'
     // //     args "--entrypoint=‘top’"
@@ -7,13 +7,13 @@ pipeline {
     // //     args '-u root'                    
     // //     reuseNode true
     // }
-    agent {
-    docker {
-        image 'maven:3.6.3-jdk-8'
-        // label 'my-defined-label'
-        args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
-    }
-}
+    // agent {
+    //     docker {
+    //         image 'maven:3.6.3-jdk-8'
+    //         // label 'my-defined-label'
+    //         args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+    //     }
+    // }
     
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
@@ -27,6 +27,13 @@ pipeline {
     // }
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3.6.3-jdk-8'
+                    // label 'my-defined-label'
+                    args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                }
+            }
             steps {
                 echo "App is ${JAVA_APPLICATION}"
                 // echo "DISABLE_AUTH is ${JAVA_APPLICATION}"
@@ -37,6 +44,13 @@ pipeline {
             environment {
                 JAVA_APPLICATION   = 'xyz'
             }
+             agent {
+                docker {
+                    image 'maven:3.6.3-jdk-8'
+                    // label 'my-defined-label'
+                    args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                }
+            }
             steps {
                 sh '''
                     mvn --version
@@ -46,17 +60,38 @@ pipeline {
             }
         }
         stage('compile') {
+             agent {
+                docker {
+                    image 'maven:3.6.3-jdk-8'
+                    // label 'my-defined-label'
+                    args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                }
+            }
             steps {
                 sh 'mvn compile'
                 echo "${JAVA_APPLICATION}"
             }
         }
         stage('test') {
+             agent {
+                docker {
+                    image 'maven:3.6.3-jdk-8'
+                    // label 'my-defined-label'
+                    args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                }
+            }
             steps {
                 sh 'mvn test'
             }
         }
         stage('package') {
+             agent {
+                docker {
+                    image 'maven:3.6.3-jdk-8'
+                    // label 'my-defined-label'
+                    args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                }
+            }
             // when {
             //     // Only say hello if a "greeting" is requested
             //     expression { params.package == true }
