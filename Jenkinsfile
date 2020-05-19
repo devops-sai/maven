@@ -11,7 +11,7 @@ pipeline {
     docker {
         image 'maven:3.6.3-jdk-8'
         // label 'my-defined-label'
-        args  '-v /tmp:/tmp'
+        args  '-v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
     }
 }
     
