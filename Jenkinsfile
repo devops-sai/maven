@@ -1,12 +1,12 @@
 pipeline {
-    // agent any
-    agent {
-        docker 'maven:3-alpine'
-    //     args "--entrypoint=‘top’"
-    // //   args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-    //     args '-u root'                    
-    //     reuseNode true
-    }
+    agent any
+    // agent {
+    //     docker 'maven:3-alpine'
+    // //     args "--entrypoint=‘top’"
+    // // //   args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+    // //     args '-u root'                    
+    // //     reuseNode true
+    // }
     
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
