@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    // agent any
     // agent {
     //     docker 'maven:3-alpine'
     // //     args "--entrypoint=‘top’"
@@ -7,6 +7,13 @@ pipeline {
     // //     args '-u root'                    
     // //     reuseNode true
     // }
+    agent {
+    docker {
+        image 'maven:3.6.3-jdk-8'
+        // label 'my-defined-label'
+        args  '-v /tmp:/tmp'
+    }
+}
     
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
