@@ -3,9 +3,9 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
     }
-    environment {
-        JAVA_APPLICATION   = 'singlemodule'
-    }
+    // environment {
+    //     JAVA_APPLICATION   = 'singlemodule'
+    // }
     // parameters {
     //     booleanParam(defaultValue: true, description: 'you can uncheck the package if it should skip the package creation', name: 'package')
     // }
@@ -19,14 +19,14 @@ pipeline {
                 }
             }
             steps {
-                echo "App is ${JAVA_APPLICATION}"
+                // echo "App is ${JAVA_APPLICATION}"
                 sh 'printenv'
             }
         }
         stage('clean') {
-            environment {
-                JAVA_APPLICATION   = 'xyz'
-            }
+            // environment {
+            //     JAVA_APPLICATION   = 'xyz'
+            // }
              agent {
                 docker {
                     image 'maven:3.6.3-jdk-8'
@@ -52,7 +52,7 @@ pipeline {
             }
             steps {
                 sh 'mvn compile'
-                echo "${JAVA_APPLICATION}"
+                // echo "${JAVA_APPLICATION}"
             }
         }
         stage('test') {
@@ -75,13 +75,8 @@ pipeline {
                     reuseNode true
                 }
             }
-            // when {
-            //     // Only say hello if a "greeting" is requested
-            //     expression { params.package == true }
-            // }
             steps {
-            //    echo "package: ${params.package}"
-               echo "JAVA_APPLICATION: ${env.JAVA_APPLICATION}"
+            //    echo "JAVA_APPLICATION: ${env.JAVA_APPLICATION}"
                 sh 'mvn package'
             }
         }
@@ -93,14 +88,8 @@ pipeline {
                     reuseNode true
                 }
             }
-            // when {
-            //     // Only say hello if a "greeting" is requested
-            //     expression { params.package == true }
-            // }
             steps {
-            //    echo "package: ${params.package}"
-               echo "JAVA_APPLICATION: ${env.JAVA_APPLICATION}"
-                sh 'mvn package'
+                sh 'docker build -t maven_git:1.0.0'
             }
         }
 
