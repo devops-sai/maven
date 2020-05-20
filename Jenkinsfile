@@ -89,11 +89,24 @@ pipeline {
                 }
             }
             steps {
-                sh 'docker build -t maven_git:1.0.0'
+                sh 'docker build -t sairam1007/sample:1.0.0 .'
+            }
+        }
+           stage('dockerPush') {
+             agent {
+                docker {
+                    image 'docker:dind'
+                    args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'docker push sairam1007/sample:1.0.0'
             }
         }
 
     }
+
     post{
         always{
             cleanWs()
