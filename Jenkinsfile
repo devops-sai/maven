@@ -89,7 +89,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'docker build -t sairam1007/sample:1.0.0 .'
+                sh 'docker build -t sairam1007/sample:1.0.1 .'
             }
         }
            stage('dockerPush') {
@@ -101,7 +101,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'docker push sairam1007/sample:1.0.0'
+                sh 'docker push sairam1007/sample:1.0.1'
             }
         }
 
