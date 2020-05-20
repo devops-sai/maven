@@ -96,7 +96,7 @@ pipeline {
              agent {
                 docker {
                     image 'docker:dind'
-                    args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                    args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
                     reuseNode true
                 }
             }
