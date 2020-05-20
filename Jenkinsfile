@@ -1,25 +1,9 @@
 pipeline {
     agent any
-    // agent {
-    //     docker 'maven:3-alpine'
-    // //     args "--entrypoint=‘top’"
-    // // //   args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-    // //     args '-u root'                    
-    // //     reuseNode true
-    // }
-    // agent {
-    //     docker {
-    //         image 'maven:3.6.3-jdk-8'
-    //         // label 'my-defined-label'
-    //         args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
-    //     }
-    // }
-    
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
     }
     environment {
-        // DISABLE_AUTH = 'true'
         JAVA_APPLICATION   = 'singlemodule'
     }
     // parameters {
@@ -30,13 +14,12 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.6.3-jdk-8'
-                    // label 'my-defined-label'
                     args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                    reuseNode true
                 }
             }
             steps {
                 echo "App is ${JAVA_APPLICATION}"
-                // echo "DISABLE_AUTH is ${JAVA_APPLICATION}"
                 sh 'printenv'
             }
         }
@@ -47,8 +30,8 @@ pipeline {
              agent {
                 docker {
                     image 'maven:3.6.3-jdk-8'
-                    // label 'my-defined-label'
                     args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                    reuseNode true
                 }
             }
             steps {
@@ -63,8 +46,8 @@ pipeline {
              agent {
                 docker {
                     image 'maven:3.6.3-jdk-8'
-                    // label 'my-defined-label'
                     args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                    reuseNode true
                 }
             }
             steps {
@@ -76,8 +59,8 @@ pipeline {
              agent {
                 docker {
                     image 'maven:3.6.3-jdk-8'
-                    // label 'my-defined-label'
                     args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                    reuseNode true
                 }
             }
             steps {
@@ -88,8 +71,8 @@ pipeline {
              agent {
                 docker {
                     image 'maven:3.6.3-jdk-8'
-                    // label 'my-defined-label'
                     args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+                    reuseNode true
                 }
             }
             // when {
@@ -102,6 +85,25 @@ pipeline {
                 sh 'mvn package'
             }
         }
+        stage('dockerBuild') {
+             agent {
+                docker {
+                    image 'docker:dind'
+                    args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                    reuseNode true
+                }
+            }
+            // when {
+            //     // Only say hello if a "greeting" is requested
+            //     expression { params.package == true }
+            // }
+            steps {
+            //    echo "package: ${params.package}"
+               echo "JAVA_APPLICATION: ${env.JAVA_APPLICATION}"
+                sh 'mvn package'
+            }
+        }
+
     }
     post{
         always{
