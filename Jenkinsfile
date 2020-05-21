@@ -102,7 +102,7 @@ pipeline {
             }
           steps {
                 script {
-                docker.withRegistry('https://registry.hub.docker.com/v1/', 'docker-hub') {
+                docker.withRegistry('', docker-hub) {
                 sh 'docker push sairam1007/sample:1.0.1'
                  }
                 }
