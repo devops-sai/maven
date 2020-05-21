@@ -7,6 +7,7 @@ pipeline {
     registry = "sairam1007/sample"
     registryCredential = 'docker-hub'
     dockerImage = ''
+    BUILD_NUMBER = "1.0.1"
   }
     // environment {
     //     JAVA_APPLICATION   = 'singlemodule'
@@ -94,7 +95,10 @@ pipeline {
                 }
             }
             steps {
-                sh 'docker build -t sairam1007/sample:1.0.1 .'
+                // sh 'docker build -t sairam1007/sample:1.0.1 .'
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
             }
         }
            stage('dockerPush') {
