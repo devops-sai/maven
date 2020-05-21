@@ -96,7 +96,7 @@ pipeline {
              agent {
                 docker {
                     image 'docker:dind'
-                    args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                    args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw'
                     reuseNode true
                 }
             }
@@ -104,7 +104,7 @@ pipeline {
                 script {
                 docker.withRegistry('https://registry.hub.docker.com/v1/repositories/sairam1007/sample', 'docker-hub') {
                 sh 'docker push sairam1007/sample:1.0.1'
-                }
+                 }
                 }
             }
         }
