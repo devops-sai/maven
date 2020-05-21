@@ -3,6 +3,11 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
     }
+    environment {
+    registry = "sairam1007/sample"
+    registryCredential = 'docker-hub'
+    dockerImage = ''
+  }
     // environment {
     //     JAVA_APPLICATION   = 'singlemodule'
     // }
@@ -101,10 +106,15 @@ pipeline {
                 }
             }
           steps {
-                script {
-                docker.withRegistry('', docker-hub) {
-                sh 'docker push sairam1007/sample:1.0.1'
-                 }
+                // script {
+                // docker.withRegistry('', docker-hub) {
+                // sh 'docker push sairam1007/sample:1.0.1'
+                //  }
+                // }
+                    script {
+                       docker.withRegistry( '', registryCredential ) {
+                       dockerImage.push()
+                    }
                 }
             }
         }
