@@ -102,13 +102,14 @@ pipeline {
             }
           steps {
                 script {
-                docker.withRegistry('https://registry.hub.docker.com/v1/repositories/sairam1007/sample', 'docker-hub') {
+                docker.withRegistry('https://registry.hub.docker.com/v1/', 'docker-hub') {
                 sh 'docker push sairam1007/sample:1.0.1'
                  }
                 }
             }
         }
-
+// https://hub.docker.com/repository/docker/sairam1007/sample
+// https://registry.hub.docker.com/v1/repositories/sairam1007/sample
     }
     post{
         always{
