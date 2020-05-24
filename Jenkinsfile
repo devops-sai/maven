@@ -90,7 +90,7 @@ pipeline {
         stage("Parallel Docker Builds"){
             failFast true
             parallel{
-                stage(docker1){
+                stages{
                     stage('dockerBuild1') {
                         agent {
                             docker {
@@ -123,7 +123,7 @@ pipeline {
                         }
                     }
                 }
-                stage(docker2){
+                stages{
                     stage('dockerBuild2') {
                         agent {
                             docker {
