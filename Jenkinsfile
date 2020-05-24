@@ -48,31 +48,31 @@ pipeline {
                 '''
             }
         }
-        stage('compile') {
-             agent {
-                docker {
-                    image 'maven:3.6.3-jdk-8'
-                    args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh 'mvn compile'
-                // echo "${JAVA_APPLICATION}"
-            }
-        }
-        stage('test') {
-             agent {
-                docker {
-                    image 'maven:3.6.3-jdk-8'
-                    args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh 'mvn test'
-            }
-        }
+        // stage('compile') {
+        //      agent {
+        //         docker {
+        //             image 'maven:3.6.3-jdk-8'
+        //             args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         sh 'mvn compile'
+        //         // echo "${JAVA_APPLICATION}"
+        //     }
+        // }
+        // stage('test') {
+        //      agent {
+        //         docker {
+        //             image 'maven:3.6.3-jdk-8'
+        //             args  '-u root -v /tmp:/tmp -v /Users/sairam/.m2:/root/.m2'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         sh 'mvn test'
+        //     }
+        // }
         stage('package') {
              agent {
                 docker {
@@ -84,6 +84,41 @@ pipeline {
             steps {
             //    echo "JAVA_APPLICATION: ${env.JAVA_APPLICATION}"
                 sh 'mvn package'
+            }
+        }
+        stage("Parallel Docker Builds"){
+            failFast true
+            parallel{
+                stage('dockerBuild1') {
+                    agent {
+                        docker {
+                            image 'docker:dind'
+                            args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        // sh 'docker build -t sairam1007/sample:1.0.2 .'
+                        script {
+                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                        }
+                    }
+                }
+                stage('dockerBuild2') {
+                    agent {
+                        docker {
+                            image 'docker:dind'
+                            args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        // sh 'docker build -t sairam1007/sample:1.0.3 .'
+                        script {
+                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                        }
+                    }
+                }
             }
         }
         stage('dockerBuild') {
