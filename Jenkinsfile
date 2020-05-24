@@ -6,7 +6,8 @@ pipeline {
     environment {
     registry = "sairam1007/sample"
     registryCredential = 'docker-hub'
-    dockerImage = ''
+    dockerImage1 = ''
+    dockerImage2 = ''
     BUILD_NUMBER = "1.0.1"
   }
     // environment {
@@ -89,74 +90,105 @@ pipeline {
         stage("Parallel Docker Builds"){
             failFast true
             parallel{
-                stage('dockerBuild1') {
-                    agent {
-                        docker {
-                            image 'docker:dind'
-                            args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
-                            reuseNode true
+                stage(docker1){
+                    stage('dockerBuild1') {
+                        agent {
+                            docker {
+                                image 'docker:dind'
+                                args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                                reuseNode true
+                            }
+                        }
+                        steps {
+                            // sh 'docker build -t sairam1007/sample:1.0.2 .'
+                            script {
+                                dockerImage1 = docker.build registry + ":1.0.2"
+                            }
                         }
                     }
-                    steps {
-                        // sh 'docker build -t sairam1007/sample:1.0.2 .'
-                        script {
-                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    stage('dockerPush1') {
+                        agent {
+                            docker {
+                                image 'docker:dind'
+                                args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
+                                reuseNode true
+                            }
+                        }
+                        steps {
+                            script {
+                                docker.withRegistry( '', registryCredential ) {
+                                    dockerImage1.push()
+                                }
+                            }
                         }
                     }
                 }
-                stage('dockerBuild2') {
-                    agent {
-                        docker {
-                            image 'docker:dind'
-                            args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
-                            reuseNode true
+                stage(docker2){
+                    stage('dockerBuild2') {
+                        agent {
+                            docker {
+                                image 'docker:dind'
+                                args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                                reuseNode true
+                            }
+                        }
+                        steps {
+                            // sh 'docker build -t sairam1007/sample:1.0.2 .'
+                            script {
+                                dockerImage2 = docker.build registry + ":1.0.3"
+                            }
                         }
                     }
-                    steps {
-                        // sh 'docker build -t sairam1007/sample:1.0.3 .'
-                        script {
-                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    stage('dockerPush2') {
+                        agent {
+                            docker {
+                                image 'docker:dind'
+                                args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
+                                reuseNode true
+                            }
+                        }
+                        steps {
+                            script {
+                                docker.withRegistry( '', registryCredential ) {
+                                    dockerImage2.push()
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-        stage('dockerBuild') {
-             agent {
-                docker {
-                    image 'docker:dind'
-                    args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
-                    reuseNode true
-                }
-            }
-            steps {
-                // sh 'docker build -t sairam1007/sample:1.0.1 .'
-                script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                }
-            }
-        }
-           stage('dockerPush') {
-             agent {
-                docker {
-                    image 'docker:dind'
-                    args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
-                    reuseNode true
-                }
-            }
-          steps {
-                // script {
-                // docker.withRegistry('', docker-hub) {
-                // sh 'docker push sairam1007/sample:1.0.1'
-                //  }
-                // }
-                    script {
-                       docker.withRegistry( '', registryCredential ) {
-                       dockerImage.push()
-                    }
-                }
-            }
-        }
+        // stage('dockerBuild') {
+        //      agent {
+        //         docker {
+        //             image 'docker:dind'
+        //             args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         // sh 'docker build -t sairam1007/sample:1.0.1 .'
+        //         script {
+        //             dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        //         }
+        //     }
+        // }
+        // stage('dockerPush') {
+        //     agent {
+        //         docker {
+        //             image 'docker:dind'
+        //             args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
+        //             reuseNode true
+        //         }
+        //     }
+        //     steps {
+        //         script {
+        //             docker.withRegistry( '', registryCredential ) {
+        //                 dockerImage.push()
+        //             }
+        //         }
+        //     }
+        // }
 // https://hub.docker.com/repository/docker/sairam1007/sample
 // https://registry.hub.docker.com/v1/repositories/sairam1007/sample
     }
