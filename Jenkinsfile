@@ -90,67 +90,71 @@ pipeline {
         stage("Parallel Docker Builds"){
             failFast true
             parallel{
-                stages{
-                    stage('dockerBuild1') {
-                        agent {
-                            docker {
-                                image 'docker:dind'
-                                args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
-                                reuseNode true
+                stage("docker1"){
+                    stages{
+                        stage('dockerBuild1') {
+                            agent {
+                                docker {
+                                    image 'docker:dind'
+                                    args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                                    reuseNode true
+                                }
+                            }
+                            steps {
+                                // sh 'docker build -t sairam1007/sample:1.0.2 .'
+                                script {
+                                    dockerImage1 = docker.build registry + ":1.0.2"
+                                }
                             }
                         }
-                        steps {
-                            // sh 'docker build -t sairam1007/sample:1.0.2 .'
-                            script {
-                                dockerImage1 = docker.build registry + ":1.0.2"
+                        stage('dockerPush1') {
+                            agent {
+                                docker {
+                                    image 'docker:dind'
+                                    args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
+                                    reuseNode true
+                                }
                             }
-                        }
-                    }
-                    stage('dockerPush1') {
-                        agent {
-                            docker {
-                                image 'docker:dind'
-                                args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
-                                reuseNode true
-                            }
-                        }
-                        steps {
-                            script {
-                                docker.withRegistry( '', registryCredential ) {
-                                    dockerImage1.push()
+                            steps {
+                                script {
+                                    docker.withRegistry( '', registryCredential ) {
+                                        dockerImage1.push()
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                stages{
-                    stage('dockerBuild2') {
-                        agent {
-                            docker {
-                                image 'docker:dind'
-                                args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
-                                reuseNode true
+                stage("docker2"){
+                    stages{
+                        stage('dockerBuild2') {
+                            agent {
+                                docker {
+                                    image 'docker:dind'
+                                    args  '-u root -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock'
+                                    reuseNode true
+                                }
+                            }
+                            steps {
+                                // sh 'docker build -t sairam1007/sample:1.0.2 .'
+                                script {
+                                    dockerImage2 = docker.build registry + ":1.0.3"
+                                }
                             }
                         }
-                        steps {
-                            // sh 'docker build -t sairam1007/sample:1.0.2 .'
-                            script {
-                                dockerImage2 = docker.build registry + ":1.0.3"
+                        stage('dockerPush2') {
+                            agent {
+                                docker {
+                                    image 'docker:dind'
+                                    args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
+                                    reuseNode true
+                                }
                             }
-                        }
-                    }
-                    stage('dockerPush2') {
-                        agent {
-                            docker {
-                                image 'docker:dind'
-                                args  '-v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock:rw -u root'
-                                reuseNode true
-                            }
-                        }
-                        steps {
-                            script {
-                                docker.withRegistry( '', registryCredential ) {
-                                    dockerImage2.push()
+                            steps {
+                                script {
+                                    docker.withRegistry( '', registryCredential ) {
+                                        dockerImage2.push()
+                                    }
                                 }
                             }
                         }
