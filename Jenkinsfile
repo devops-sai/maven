@@ -1,8 +1,10 @@
 pipeline {
     agent any
+    triggers { pollSCM('H/1 * * * *') }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
         timestamps()
+        disableConcurrentBuilds()
     }
     environment {
     registry = "sairam1007/sample"
