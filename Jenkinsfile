@@ -2,6 +2,7 @@ pipeline {
     agent any
     options {
         buildDiscarder(logRotator(numToKeepStr: '3'))
+        timestamps()
     }
     environment {
     registry = "sairam1007/sample"
