@@ -1,2 +1,4 @@
-@Library('sharedlibrary@master') _
-myPipleline(project: 'sai project')
+// @Library('sharedlibrary@master') _
+myPipleline { 
+    project = 'sai project' 
+}
